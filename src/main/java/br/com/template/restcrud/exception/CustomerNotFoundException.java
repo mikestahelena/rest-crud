@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CustomerNotFoundException extends RuntimeException {
 
-    public CustomerNotFoundException(String message) {
-        super(message);
-    }
+	public CustomerNotFoundException(String message) {
+		super(message);
+	}
 }

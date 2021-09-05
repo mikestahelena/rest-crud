@@ -1,11 +1,12 @@
 package br.com.template.restcrud.domain;
 
-import lombok.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+
+import lombok.*;
 
 @Entity
 @Table(name = "Customer")
@@ -16,26 +17,22 @@ import java.time.LocalDateTime;
 @Setter
 public class Customer {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-    @NotNull
-    private String cpf;
-    private String name;
-    private LocalDate birthDate;
-    private String email;
-    private String phoneNumber;
-    private LocalDateTime dateCreated;
-    private LocalDateTime lastUpdated;
+	@NotNull
+	private String cpf;
+	private String name;
+	private LocalDate birthDate;
+	private String email;
+	private String phoneNumber;
+	private LocalDateTime dateCreated;
+	private LocalDateTime lastUpdated;
 
-    public static Customer fromCustomerDTO(CustomerDTO customerDTO) {
-        return Customer.builder()
-                .cpf(customerDTO.getCpf())
-                .name(customerDTO.getName())
-                .birthDate(customerDTO.getBirthDate())
-                .email(customerDTO.getEmail())
-                .phoneNumber(customerDTO.getPhoneNumber())
-                .build();
-    }
+	public static Customer fromCustomerDTO(CustomerDTO customerDTO) {
+		return Customer.builder().cpf(customerDTO.getCpf()).name(customerDTO.getName())
+				.birthDate(customerDTO.getBirthDate()).email(customerDTO.getEmail())
+				.phoneNumber(customerDTO.getPhoneNumber()).build();
+	}
 }

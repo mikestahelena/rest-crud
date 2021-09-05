@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.5.4'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id "com.diffplug.spotless" version "5.15.0"
 }
 
 group = 'br.com.template'
@@ -32,4 +33,25 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+spotless {
+    encoding 'UTF-8'
+	compileJava.dependsOn 'spotlessApply'
+	format 'misc', {
+		target '**/*.md', '**/.gitignore', '**/*.yml', '**/*.yaml', '**/*.json'
+		targetExclude 'build/**'
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+	java {
+		importOrderFile 'spotless.importorder'
+		targetExclude 'build/generated-sources/**'
+		removeUnusedImports()
+		eclipse().configFile 'spotless.eclipse-fmt.xml'
+        endWithNewline()
+        trimTrailingWhitespace()
+		custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
+	}
+	lineEndings 'UNIX'
 }
