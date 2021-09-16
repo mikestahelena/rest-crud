@@ -17,22 +17,30 @@ import lombok.*;
 @Setter
 public class Customer {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-	@NotNull
-	private String cpf;
-	private String name;
-	private LocalDate birthDate;
-	private String email;
-	private String phoneNumber;
-	private LocalDateTime dateCreated;
-	private LocalDateTime lastUpdated;
+    @NotNull
+    private String document;
 
-	public static Customer fromCustomerDTO(CustomerDTO customerDTO) {
-		return Customer.builder().cpf(customerDTO.getCpf()).name(customerDTO.getName())
-				.birthDate(customerDTO.getBirthDate()).email(customerDTO.getEmail())
-				.phoneNumber(customerDTO.getPhoneNumber()).build();
-	}
+    @NotNull
+    private CustomerType customerType;
+    private String name;
+    private LocalDate birthDate;
+    private String email;
+    private String phoneNumber;
+    private LocalDateTime dateCreated;
+    private LocalDateTime lastUpdated;
+
+    public static Customer fromCustomerDTO(CustomerDTO customerDTO) {
+        return Customer.builder()
+            .document(customerDTO.getDocument())
+            .customerType(customerDTO.getCustomerType())
+            .name(customerDTO.getName())
+            .birthDate(customerDTO.getBirthDate())
+            .email(customerDTO.getEmail())
+            .phoneNumber(customerDTO.getPhoneNumber())
+            .build();
+    }
 }

@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ErrorMessage {
-	private int statusCode;
-	private LocalDateTime timestamp;
-	private String message;
-	private String description;
+    private int statusCode;
+    private LocalDateTime timestamp;
+    private String message;
+    private String description;
 }

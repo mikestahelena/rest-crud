@@ -12,26 +12,35 @@ import lombok.Data;
 @Builder
 public class CustomerDTO {
 
-	private Long id;
+    private Long id;
 
-	@NotNull
-	private String cpf;
+    @NotNull
+    private String document;
 
-	@NotNull
-	private String name;
+    @NotNull
+    private CustomerType customerType;
 
-	@NotNull
-	private LocalDate birthDate;
+    @NotNull
+    private String name;
 
-	@Email
-	private String email;
+    @NotNull
+    private LocalDate birthDate;
 
-	private String phoneNumber;
+    @Email
+    private String email;
 
-	public static CustomerDTO fromCustomer(Customer customer) {
-		return CustomerDTO.builder().id(customer.getId()).cpf(customer.getCpf()).name(customer.getName())
-				.birthDate(customer.getBirthDate()).email(customer.getEmail()).phoneNumber(customer.getPhoneNumber())
-				.build();
-	}
+    private String phoneNumber;
+
+    public static CustomerDTO fromCustomer(Customer customer) {
+        return CustomerDTO.builder()
+            .id(customer.getId())
+            .document(customer.getDocument())
+            .customerType(customer.getCustomerType())
+            .name(customer.getName())
+            .birthDate(customer.getBirthDate())
+            .email(customer.getEmail())
+            .phoneNumber(customer.getPhoneNumber())
+            .build();
+    }
 
 }
