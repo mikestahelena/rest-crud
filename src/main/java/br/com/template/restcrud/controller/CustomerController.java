@@ -2,12 +2,12 @@ package br.com.template.restcrud.controller;
 
 import static org.springframework.http.HttpStatus.OK;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import lombok.AllArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +24,8 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
-        return new ResponseEntity<>(customerService.getAllCustomers(), OK);
+    public ResponseEntity<Page<CustomerDTO>> getAllCustomers(Pageable pageable) {
+        return new ResponseEntity<>(customerService.getAllCustomers(pageable), OK);
     }
 
     @GetMapping("/{id}")
@@ -33,15 +33,20 @@ public class CustomerController {
         return new ResponseEntity<>(customerService.getCustomerById(id), OK);
     }
 
+    @GetMapping("/find/{document}")
+    public ResponseEntity<CustomerDTO> getCustomerByDocument(@PathVariable("document") String document) {
+        return new ResponseEntity<>(customerService.getCustomerByDocument(document), OK);
+    }
+
     @GetMapping("/type/{customerType}")
-    public ResponseEntity<List<CustomerDTO>> getCustomerByType(
-            @PathVariable("customerType") CustomerType customerType) {
-        return new ResponseEntity<>(customerService.getCustomerByCustomerType(customerType), OK);
+    public ResponseEntity<Page<CustomerDTO>> getCustomerByType(@PathVariable("customerType") CustomerType customerType,
+            Pageable pageable) {
+        return new ResponseEntity<>(customerService.getCustomerByCustomerType(customerType, pageable), OK);
     }
 
     @GetMapping("/find")
-    public ResponseEntity<List<CustomerDTO>> getCustomersByName(@RequestParam String name) {
-        return new ResponseEntity<>(customerService.getCustomersByName(name), OK);
+    public ResponseEntity<Page<CustomerDTO>> getCustomersByName(@RequestParam String name, Pageable pageable) {
+        return new ResponseEntity<>(customerService.getCustomersByName(name, pageable), OK);
     }
 
     @PostMapping

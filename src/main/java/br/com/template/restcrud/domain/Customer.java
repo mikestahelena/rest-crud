@@ -18,19 +18,30 @@ import lombok.*;
 public class Customer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
     private String document;
 
     @NotNull
+    @Column(name = "customer_type")
+    @Enumerated(EnumType.STRING)
     private CustomerType customerType;
+
     private String name;
+
+    @Column(name = "birth_date")
     private LocalDate birthDate;
     private String email;
+
+    @Column(name = "phone_number")
     private String phoneNumber;
+
+    @Column(name = "date_created")
     private LocalDateTime dateCreated;
+
+    @Column(name = "last_updated")
     private LocalDateTime lastUpdated;
 
     public static Customer fromCustomerDTO(CustomerDTO customerDTO) {

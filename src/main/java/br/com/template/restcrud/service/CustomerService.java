@@ -1,14 +1,14 @@
 package br.com.template.restcrud.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import lombok.AllArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.template.restcrud.domain.Customer;
@@ -25,8 +25,12 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    public List<CustomerDTO> getAllCustomers() {
-        return getCustomerDTOStream(customerRepository.findAll()).collect(Collectors.toList());
+    public Page<CustomerDTO> getAllCustomers(Pageable pageRequest) {
+        final var page = customerRepository.findAll(pageRequest);
+        return new PageImpl<>(page.getContent()
+            .stream()
+            .map(CustomerDTO::fromCustomer)
+            .collect(Collectors.toList()), pageRequest, page.getTotalElements());
     }
 
     public CustomerDTO getCustomerById(Long id) {
@@ -34,13 +38,26 @@ public class CustomerService {
             .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND));
     }
 
-    public List<CustomerDTO> getCustomersByName(String name) {
-        return getCustomerDTOStream(customerRepository.findByNameContainingIgnoreCase(name))
-            .collect(Collectors.toList());
+    public CustomerDTO getCustomerByDocument(String document) {
+        return customerRepository.findByDocument(document)
+            .map(CustomerDTO::fromCustomer)
+            .orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND));
     }
 
-    public List<CustomerDTO> getCustomerByCustomerType(CustomerType customerType) {
-        return getCustomerDTOStream(customerRepository.findByCustomerType(customerType)).collect(Collectors.toList());
+    public Page<CustomerDTO> getCustomersByName(String name, Pageable pageable) {
+        final var page = customerRepository.findByNameContainingIgnoreCase(name, pageable);
+        return new PageImpl<>(page.getContent()
+            .stream()
+            .map(CustomerDTO::fromCustomer)
+            .collect(Collectors.toList()), pageable, page.getTotalElements());
+    }
+
+    public Page<CustomerDTO> getCustomerByCustomerType(CustomerType customerType, Pageable pageable) {
+        final var page = customerRepository.findByCustomerType(customerType, pageable);
+        return new PageImpl<>(page.getContent()
+            .stream()
+            .map(CustomerDTO::fromCustomer)
+            .collect(Collectors.toList()), pageable, page.getTotalElements());
     }
 
     public CustomerDTO createCustomer(CustomerDTO customerDTO) {
@@ -52,8 +69,11 @@ public class CustomerService {
     }
 
     public void deleteCustomer(Long id) {
-        var customer = findCustomerById(id).orElseThrow(() -> new CustomerNotFoundException(CUSTOMER_NOT_FOUND));
-        customerRepository.delete(customer);
+        if (customerRepository.existsById(id)) {
+            customerRepository.deleteById(id);
+        } else {
+            throw new CustomerNotFoundException(CUSTOMER_NOT_FOUND);
+        }
     }
 
     public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO) {
@@ -73,10 +93,4 @@ public class CustomerService {
         return Optional.of(customerRepository.findById(id))
             .get();
     }
-
-    private Stream<CustomerDTO> getCustomerDTOStream(Iterable<Customer> customerIterable) {
-        return StreamSupport.stream(customerIterable.spliterator(), false)
-            .map(CustomerDTO::fromCustomer);
-    }
-
 }
