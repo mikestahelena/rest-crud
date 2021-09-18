@@ -25,12 +25,12 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    public Page<CustomerDTO> getAllCustomers(Pageable pageRequest) {
-        final var page = customerRepository.findAll(pageRequest);
+    public Page<CustomerDTO> getAllCustomers(Pageable pageable) {
+        final var page = customerRepository.findAll(pageable);
         return new PageImpl<>(page.getContent()
             .stream()
             .map(CustomerDTO::fromCustomer)
-            .collect(Collectors.toList()), pageRequest, page.getTotalElements());
+            .collect(Collectors.toList()), pageable, page.getTotalElements());
     }
 
     public CustomerDTO getCustomerById(Long id) {
