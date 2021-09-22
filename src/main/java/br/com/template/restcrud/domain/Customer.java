@@ -29,14 +29,31 @@ public class Customer {
     @Enumerated(EnumType.STRING)
     private CustomerType customerType;
 
-    private String name;
+    @NotNull
+    @Column(name = "firstname")
+    private String firstname;
 
-    @Column(name = "birth_date")
+    @NotNull
+    @Column(name = "lastname")
+    private String lastname;
+
+    @Column(name = "birthdate")
     private LocalDate birthDate;
+
+    @Column(name = "country")
+    private String country;
+
+    @Column(name = "email")
     private String email;
 
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @Column(name = "job_title")
+    private String jobTitle;
+
+    @Column(name = "company")
+    private String company;
 
     @Column(name = "date_created")
     private LocalDateTime dateCreated;
@@ -46,12 +63,17 @@ public class Customer {
 
     public static Customer fromCustomerDTO(CustomerDTO customerDTO) {
         return Customer.builder()
+            .id(customerDTO.getId())
             .document(customerDTO.getDocument())
             .customerType(customerDTO.getCustomerType())
-            .name(customerDTO.getName())
+            .firstname(customerDTO.getFirstname())
+            .lastname(customerDTO.getLastname())
             .birthDate(customerDTO.getBirthDate())
+            .country(customerDTO.getCountry())
             .email(customerDTO.getEmail())
             .phoneNumber(customerDTO.getPhoneNumber())
+            .jobTitle(customerDTO.getJobTitle())
+            .company(customerDTO.getCompany())
             .build();
     }
 }

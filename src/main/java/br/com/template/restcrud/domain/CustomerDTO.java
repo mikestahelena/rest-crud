@@ -1,8 +1,8 @@
 package br.com.template.restcrud.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 import lombok.Builder;
@@ -21,25 +21,43 @@ public class CustomerDTO {
     private CustomerType customerType;
 
     @NotNull
-    private String name;
+    private String firstname;
 
     @NotNull
+    private String lastname;
+
     private LocalDate birthDate;
 
-    @Email
+    private String country;
+
+    @NotNull
     private String email;
 
     private String phoneNumber;
+
+    private String jobTitle;
+
+    private String company;
+
+    private LocalDateTime dateCreated;
+
+    private LocalDateTime lastUpdated;
 
     public static CustomerDTO fromCustomer(Customer customer) {
         return CustomerDTO.builder()
             .id(customer.getId())
             .document(customer.getDocument())
             .customerType(customer.getCustomerType())
-            .name(customer.getName())
+            .firstname(customer.getFirstname())
+            .lastname(customer.getLastname())
             .birthDate(customer.getBirthDate())
+            .country(customer.getCountry())
             .email(customer.getEmail())
             .phoneNumber(customer.getPhoneNumber())
+            .jobTitle(customer.getJobTitle())
+            .company(customer.getCompany())
+            .dateCreated(customer.getDateCreated())
+            .lastUpdated(customer.getLastUpdated())
             .build();
     }
 

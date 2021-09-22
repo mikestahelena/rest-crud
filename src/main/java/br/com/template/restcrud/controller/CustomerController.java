@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,11 +23,15 @@ import br.com.template.restcrud.service.CustomerService;
 @AllArgsConstructor
 public class CustomerController {
 
+    public static final int DEFAULT_REQUEST_SIZE = 50;
     private final CustomerService customerService;
 
     @GetMapping
-    public ResponseEntity<Page<CustomerDTO>> getAllCustomers(Pageable pageable) {
-        return new ResponseEntity<>(customerService.getAllCustomers(pageable), OK);
+    public ResponseEntity<Page<CustomerDTO>> getCustomersByAttribute(@RequestParam(required = false) String firstname,
+            @RequestParam(required = false) String lastname, @RequestParam(required = false) String country,
+            @PageableDefault(sort = "firstname", direction = Sort.Direction.ASC, size = DEFAULT_REQUEST_SIZE) Pageable pageable) {
+        return new ResponseEntity<>(customerService.getCustomersByAttribute(firstname, lastname, country, pageable),
+                OK);
     }
 
     @GetMapping("/{id}")
@@ -40,13 +46,8 @@ public class CustomerController {
 
     @GetMapping("/type/{customerType}")
     public ResponseEntity<Page<CustomerDTO>> getCustomerByType(@PathVariable("customerType") CustomerType customerType,
-            Pageable pageable) {
+            @PageableDefault(sort = "firstname", direction = Sort.Direction.ASC, size = DEFAULT_REQUEST_SIZE) Pageable pageable) {
         return new ResponseEntity<>(customerService.getCustomerByCustomerType(customerType, pageable), OK);
-    }
-
-    @GetMapping("/find")
-    public ResponseEntity<Page<CustomerDTO>> getCustomersByName(@RequestParam String name, Pageable pageable) {
-        return new ResponseEntity<>(customerService.getCustomersByName(name, pageable), OK);
     }
 
     @PostMapping
